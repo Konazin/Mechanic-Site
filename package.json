@@ -1,0 +1,33 @@
+{
+  "name": "mecanica-app",
+  "version": "1.0.0",
+  "description": "Site de mecânica com login e agendamentos",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^9.6.0",
+    "ejs": "^3.1.10",
+    "express": "^4.22.1",
+    "express-session": "^1.19.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Konazin/Mechanic-Site.git"
+  },
+  "keywords": [
+    "mechanic"
+  ],
+  "author": "Kona-Miguel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Konazin/Mechanic-Site/issues"
+  },
+  "homepage": "https://github.com/Konazin/Mechanic-Site#readme"
+}

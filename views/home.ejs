@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoMec — Mecânica de Alta Performance</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="navbar">
+  <a href="/" class="nav-logo">AUTO<span class="dot">·</span>MEC</a>
+  <ul class="nav-links">
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#contato">Contato</a></li>
+
+    <%# Bloco condicional — deixe o back-end injetar a variável `usuario` %>
+    <% if (locals.usuario) { %>
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/logout">Sair</a></li>
+    <% } else { %>
+      <li><a href="/login">Entrar</a></li>
+      <li><a href="/cadastro" class="nav-cta">Agendar</a></li>
+    <% } %>
+  </ul>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<div style="max-width:1200px;margin:0 auto;padding:0 2.5rem;">
+  <section class="hero" style="padding-left:0;padding-right:0;max-width:none;">
+
+    <!-- Esquerda -->
+    <div>
+      <div class="hero-badge">Especialistas desde 2005</div>
+      <h1>
+        MECÂNICA
+        <span class="accent">DE ALTA</span>
+        PERFORMANCE
+      </h1>
+      <p class="hero-desc">
+        Diagnóstico preciso, peças de qualidade e mão de obra especializada.
+        Porque seu veículo merece o melhor cuidado antes de qualquer trajeto.
+      </p>
+      <div class="hero-actions">
+        <% if (locals.usuario) { %>
+          <a href="/agendar" class="btn btn-primary">⚙ Agendar Serviço</a>
+          <a href="/dashboard" class="btn btn-ghost">Meus agendamentos →</a>
+        <% } else { %>
+          <a href="/cadastro" class="btn btn-primary">⚙ Agendar Agora</a>
+          <a href="#servicos" class="btn btn-ghost">Ver serviços →</a>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Direita — painel de stats -->
+    <div class="hero-panel">
+      <div class="stat-block">
+        <div class="stat-num">+2.4K</div>
+        <div class="stat-label">Veículos Atendidos</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">19</div>
+        <div class="stat-label">Anos de Experiência</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Garantia nos Serviços</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-num">48h</div>
+        <div class="stat-label">Prazo Médio de Entrega</div>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<!-- ═══ SERVIÇOS ═══ -->
+<div style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <section class="section" id="servicos">
+    <div class="section-head">
+      <div>
+        <span class="label">O que fazemos</span>
+        <h2 class="section-title" style="margin-top:.3rem;">NOSSOS SERVIÇOS</h2>
+      </div>
+      <a href="/agendar" class="btn btn-primary btn-sm">Agendar →</a>
+    </div>
+
+    <div class="servicos-grid">
+
+      <%# O back-end deve passar um array `servicos` para cá %>
+      <% if (locals.servicos && servicos.length) { %>
+        <% servicos.forEach(s => { %>
+        <div class="servico-card">
+          <span class="servico-icon"><%= s.icone %></span>
+          <h3><%= s.nome %></h3>
+          <p><%= s.descricao %></p>
+          <div class="servico-preco">
+            A partir de R$ <%= parseFloat(s.preco_base).toFixed(2).replace('.', ',') %>
+          </div>
+        </div>
+        <% }) %>
+      <% } else { %>
+        <!-- cards estáticos de fallback enquanto não há banco -->
+        <div class="servico-card"><span class="servico-icon">🔧</span><h3>Troca de Óleo</h3><p>Troca completa com filtro incluso e revisão de níveis.</p><div class="servico-preco">A partir de R$ 120,00</div></div>
+        <div class="servico-card"><span class="servico-icon">⚙️</span><h3>Alinhamento</h3><p>Correção do eixo e equilíbrio das quatro rodas.</p><div class="servico-preco">A partir de R$ 150,00</div></div>
+        <div class="servico-card"><span class="servico-icon">🚗</span><h3>Revisão Completa</h3><p>Verificação geral de todos os sistemas do veículo.</p><div class="servico-preco">A partir de R$ 450,00</div></div>
+        <div class="servico-card"><span class="servico-icon">🛑</span><h3>Freios</h3><p>Substituição de pastilhas, discos e fluido de freio.</p><div class="servico-preco">A partir de R$ 280,00</div></div>
+        <div class="servico-card"><span class="servico-icon">🔩</span><h3>Suspensão</h3><p>Diagnóstico e reparo completo do sistema de suspensão.</p><div class="servico-preco">A partir de R$ 350,00</div></div>
+        <div class="servico-card"><span class="servico-icon">❄️</span><h3>Ar Condicionado</h3><p>Carga, limpeza e manutenção do sistema de A/C.</p><div class="servico-preco">A partir de R$ 200,00</div></div>
+      <% } %>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ CONTATO ═══ -->
+<div class="contato-strip" id="contato">
+  <div class="contato-inner">
+    <div class="contato-item"><span class="ic">📍</span><h4>Endereço</h4><p>Rua das Oficinas, 450<br>Natal — RN</p></div>
+    <div class="contato-item"><span class="ic">📞</span><h4>Telefone</h4><p>(84) 99999-0001<br>(84) 3333-0002</p></div>
+    <div class="contato-item"><span class="ic">🕐</span><h4>Horário</h4><p>Seg–Sex: 8h às 18h<br>Sáb: 8h às 13h</p></div>
+    <div class="contato-item"><span class="ic">💬</span><h4>WhatsApp</h4><p>(84) 99999-0001<br>Resposta rápida</p></div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-logo">AUTO<span>·</span>MEC</div>
+  <small>© 2025 AutoMec — Todos os direitos reservados</small>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — AutoMec</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="/" class="nav-logo">AUTO<span class="dot">·</span>MEC</a>
+  <ul class="nav-links">
+    <li><a href="/">Início</a></li>
+    <li><a href="/agendar" class="nav-cta">+ Agendar</a></li>
+    <li><a href="/logout">Sair</a></li>
+  </ul>
+</nav>
+
+<div class="dash-layout">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="dash-sidebar">
+    <div class="sidebar-user">
+      <%# `usuario` é injetado pelo back-end (req.session.usuario) %>
+      <div class="sidebar-avatar">
+        <%= locals.usuario ? usuario.nome.charAt(0).toUpperCase() : 'U' %>
+      </div>
+      <div class="sidebar-name">
+        <%= locals.usuario ? usuario.nome : 'Usuário' %>
+      </div>
+      <div class="sidebar-email">
+        <%= locals.usuario ? usuario.email : '' %>
+      </div>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li>
+        <a href="/dashboard" class="active">
+          <span class="nav-icon">📋</span> Agendamentos
+        </a>
+      </li>
+      <li>
+        <a href="/agendar">
+          <span class="nav-icon">➕</span> Novo Agendamento
+        </a>
+      </li>
+      <li>
+        <a href="/">
+          <span class="nav-icon">🏠</span> Voltar ao Site
+        </a>
+      </li>
+      <li>
+        <a href="/logout">
+          <span class="nav-icon">🚪</span> Sair
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- ═══ CONTEÚDO ═══ -->
+  <main class="dash-main">
+
+    <div class="dash-topbar">
+      <div>
+        <h1>
+          OLÁ, <span><%= locals.usuario ? usuario.nome.split(' ')[0].toUpperCase() : 'USUÁRIO' %></span>
+        </h1>
+        <small>Gerencie seus agendamentos abaixo</small>
+      </div>
+      <a href="/agendar" class="btn btn-primary">+ Novo Agendamento</a>
+    </div>
+
+    <!-- Estatísticas rápidas -->
+    <%
+      /* O back-end passa o array `agendamentos`.
+         Calcule os totais aqui no template: */
+      const total     = locals.agendamentos ? agendamentos.length : 0;
+      const pendentes = locals.agendamentos ? agendamentos.filter(a => a.status === 'pendente').length : 0;
+      const confirmados = locals.agendamentos ? agendamentos.filter(a => a.status === 'confirmado').length : 0;
+      const cancelados  = locals.agendamentos ? agendamentos.filter(a => a.status === 'cancelado').length : 0;
+    %>
+    <div class="dash-stats">
+      <div class="dash-stat">
+        <div class="ds-num"><%= total %></div>
+        <div class="ds-label">Total</div>
+      </div>
+      <div class="dash-stat">
+        <div class="ds-num"><%= pendentes %></div>
+        <div class="ds-label">Pendentes</div>
+      </div>
+      <div class="dash-stat">
+        <div class="ds-num"><%= confirmados %></div>
+        <div class="ds-label">Confirmados</div>
+      </div>
+      <div class="dash-stat">
+        <div class="ds-num"><%= cancelados %></div>
+        <div class="ds-label">Cancelados</div>
+      </div>
+    </div>
+
+    <!-- Tabela -->
+    <% if (total === 0) { %>
+      <div class="empty-dash">
+        <div class="big-icon">🔧</div>
+        <p>Você ainda não tem agendamentos.<br>Que tal marcar uma revisão?</p>
+        <a href="/agendar" class="btn btn-primary">Agendar agora</a>
+      </div>
+    <% } else { %>
+      <div style="overflow-x:auto;">
+        <table class="ag-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Veículo</th>
+              <th>Serviço</th>
+              <th>Data</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% agendamentos.forEach(ag => { %>
+            <tr>
+              <td style="color:var(--text-dim);font-size:.8rem;">#<%= ag.id %></td>
+              <td><strong><%= ag.veiculo %></strong><br><span style="font-size:.78rem;color:var(--text-dim)"><%= ag.nome_cliente %></span></td>
+              <td><%= ag.servico %></td>
+              <td><%= ag.data_agendamento %></td>
+              <td><span class="badge badge-<%= ag.status %>"><%= ag.status %></span></td>
+              <td>
+                <% if (ag.status !== 'cancelado') { %>
+                  <form method="POST" action="/cancelar/<%= ag.id %>"
+                        onsubmit="return confirm('Cancelar este agendamento?')">
+                    <button type="submit" class="btn btn-danger">Cancelar</button>
+                  </form>
+                <% } else { %>
+                  <span style="color:var(--text-dim);font-size:.8rem;">—</span>
+                <% } %>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+
+  </main>
+</div>
+
+</body>
+</html>

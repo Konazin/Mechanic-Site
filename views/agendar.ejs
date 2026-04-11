@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar Serviço — AutoMec</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="/" class="nav-logo">AUTO<span class="dot">·</span>MEC</a>
+  <ul class="nav-links">
+    <li><a href="/">Início</a></li>
+    <li><a href="/dashboard">Meus Agendamentos</a></li>
+    <li><a href="/logout">Sair</a></li>
+  </ul>
+</nav>
+
+<div class="section" style="padding-top:2rem;padding-bottom:3rem;">
+
+  <div style="margin-bottom:2rem;">
+    <span class="label">Novo Agendamento</span>
+    <h2 class="section-title" style="margin-top:.3rem;">AGENDAR SERVIÇO</h2>
+  </div>
+
+  <div class="agendar-layout">
+
+    <!-- ═══ FORMULÁRIO ═══ -->
+    <div class="agendar-form-box">
+
+      <% if (locals.erro && erro) { %>
+        <div class="alert alert-error">⚠ <%= erro %></div>
+      <% } %>
+      <% if (locals.sucesso && sucesso) { %>
+        <div class="alert alert-success">✔ <%= sucesso %></div>
+      <% } %>
+
+      <form method="POST" action="/agendar">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nome_cliente">Nome do Cliente</label>
+            <input type="text" id="nome_cliente" name="nome_cliente"
+                   placeholder="Nome completo" required>
+          </div>
+          <div class="form-group">
+            <label for="telefone">Telefone / WhatsApp</label>
+            <input type="tel" id="telefone" name="telefone"
+                   placeholder="(84) 99999-0000" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="veiculo">Veículo</label>
+          <input type="text" id="veiculo" name="veiculo"
+                 placeholder="Ex: Honda Civic 2022 Prata" required>
+        </div>
+
+        <div class="form-group">
+          <label for="servico">Serviço desejado</label>
+          <select id="servico" name="servico" required>
+            <option value="">Selecione um serviço...</option>
+
+            <%# O back-end injeta `servicos` aqui %>
+            <% if (locals.servicos && servicos.length) { %>
+              <% servicos.forEach(s => { %>
+                <option value="<%= s.nome %>">
+                  <%= s.icone %> <%= s.nome %> — R$ <%= parseFloat(s.preco_base).toFixed(2).replace('.', ',') %>
+                </option>
+              <% }) %>
+            <% } else { %>
+              <option value="Troca de Óleo">🔧 Troca de Óleo</option>
+              <option value="Alinhamento">⚙️ Alinhamento e Balanceamento</option>
+              <option value="Revisão Completa">🚗 Revisão Completa</option>
+              <option value="Freios">🛑 Troca de Freios</option>
+              <option value="Suspensão">🔩 Suspensão</option>
+              <option value="Ar Condicionado">❄️ Ar Condicionado</option>
+            <% } %>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="data_agendamento">Data desejada</label>
+          <input type="date" id="data_agendamento" name="data_agendamento"
+                 min="<%= new Date().toISOString().split('T')[0] %>" required>
+        </div>
+
+        <hr class="form-divider">
+
+        <button type="submit" class="btn btn-primary"
+                style="width:100%;justify-content:center;">
+          Confirmar Agendamento →
+        </button>
+
+        <div class="form-foot" style="margin-top:1rem;">
+          <a href="/dashboard">← Voltar ao Dashboard</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- ═══ SIDEBAR INFORMATIVA ═══ -->
+    <div class="agendar-sidebar">
+
+      <div class="info-card">
+        <h4>Como funciona</h4>
+        <div class="info-item"><span class="i">1️⃣</span><span>Preencha os dados e escolha o serviço</span></div>
+        <div class="info-item"><span class="i">2️⃣</span><span>Nossa equipe confirmará o horário por WhatsApp</span></div>
+        <div class="info-item"><span class="i">3️⃣</span><span>Apareça na data combinada e deixe o carro conosco</span></div>
+      </div>
+
+      <div class="info-card">
+        <h4>Horário de Atendimento</h4>
+        <div class="info-item"><span class="i">🕗</span><span>Seg–Sex: 8h às 18h</span></div>
+        <div class="info-item"><span class="i">🕗</span><span>Sábado: 8h às 13h</span></div>
+        <div class="info-item"><span class="i">🚫</span><span>Domingos e feriados: fechado</span></div>
+      </div>
+
+      <div class="info-card">
+        <h4>Contato Direto</h4>
+        <div class="info-item"><span class="i">📞</span><span>(84) 99999-0001</span></div>
+        <div class="info-item"><span class="i">📍</span><span>Rua das Oficinas, 450 — Natal/RN</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

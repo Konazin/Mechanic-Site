@@ -1,0 +1,37 @@
+:root {
+  --bg: #f4f6fb;
+  --text: #2f3a4f;
+  --primary: #0f79c6;
+  --primary-light: #3d9ef1;
+  --accent: #f2b816;
+  --white: #fff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Inter, system-ui, sans-serif; line-height: 1.5; color: var(--text); background: var(--bg); }
+.container { width: min(1120px, 90vw); margin: 0 auto; padding: 2rem 0; }
+.site-header { background: var(--white); border-bottom: 1px solid #e7eaf3; position: sticky; top: 0; z-index: 50; }
+.site-header .container { display: flex; align-items: center; justify-content: space-between; }
+.logo { font-size: 1.4rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+.nav { display: flex; gap: 1rem; }
+.nav a { color: var(--text); text-decoration: none; font-weight: 600; }
+.menu-toggle { display: none; border: 0; background: none; font-size: 1.6rem; cursor: pointer; }
+.hero { background: url('../images/oficina-hero.jpg') center/cover no-repeat; min-height: 60vh; display: flex; align-items: center; color: #fff; text-shadow: 0 1px 5px rgba(0, 0, 0, .45); }
+.hero .container { max-width: 720px; }
+.hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1rem; }
+.hero p { margin-bottom: 1.2rem; }
+.btn-primary { display: inline-block; background: var(--primary); color: #fff; padding: .8rem 1.2rem; border-radius: 6px; text-decoration: none; font-weight: 700; border: 1px solid transparent; transition: background .25s ease; }
+.btn-primary:hover { background: var(--primary-light); }
+.servicos .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.card { background: #fff; padding: 1.3rem; border-radius: 12px; box-shadow: 0 6px 22px rgba(0, 0, 0, .08); }
+.sobre, .depoimentos, .contato { margin-top: 2.5rem; background: #fff; border-radius: 12px; padding: 1.8rem; box-shadow: 0 5px 18px rgba(47, 58, 79, .07); }
+.depoimentos blockquote { font-style: italic; margin-top: 1rem; }
+.contato form { display: grid; gap: .75rem; }
+.contato input, .contato textarea { width: 100%; border: 1px solid #d6dce8; border-radius: 10px; padding: .85rem; font-size: 1rem; }
+.contato #form-msg { margin-top: .6rem; color: var(--primary); }
+.footer { text-align: center; padding: 1.2rem 0; margin-top: 2.5rem; font-size: .95rem; color: #57627a; }
+@media (max-width: 768px) {
+  .nav { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--white); flex-direction: column; gap: 0; border-bottom: 1px solid #e7eaf3; }
+  .nav a { padding: .8rem 1rem; border-top: 1px solid #f2f5fb; }
+  .menu-toggle { display: inline-block; }
+  .hero { min-height: 50vh; }
+}

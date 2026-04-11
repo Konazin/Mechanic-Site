@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Oficina Mecânica Inova - Manutenção automotiva, revisão e elétrica com 15 anos de experiência. Atendimento de confiança em Natal/RN." />
+  <meta name="keywords" content="mecânica, oficina, manutenção automotiva, troca de óleo, revisão, diagnóstico elétrico" />
+  <meta name="author" content="Mecânica Inova" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Oficina Mecânica Inova - Seu carro em boas mãos" />
+  <meta property="og:description" content="Manutenção, revisão e elétrica automotiva com confiança e rapidez." />
+  
+  <title>Oficina Mecânica Inova - Manutenção Automotiva de Confiança</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>" />
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../public/assets/css/style.css" />
+  
+  <!-- Preconnect para performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container">
+      <a href="#" class="logo" aria-label="Mecânica Inova - Página inicial">
+        🔧 Mecânica Inova
+      </a>
+      <nav class="nav" id="main-nav" aria-label="Navegação principal">
+        <a href="#servicos">Serviços</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#depoimentos">Depoimentos</a>
+        <a href="#contato">Contato</a>
+      </nav>
+      <button 
+        id="menu-toggle" 
+        class="menu-toggle" 
+        aria-label="Abrir menu de navegação"
+        aria-expanded="false"
+        aria-controls="main-nav">
+        ☰
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <h1 id="hero-title">Seu carro em boas mãos</h1>
+        <p>Manutenção, revisão e elétrica automotiva com confiança e rapidez.</p>
+        <a href="#contato" class="btn-primary">Agendar Serviço</a>
+      </div>
+    </section>
+
+    <!-- SERVIÇOS -->
+    <section id="servicos" class="servicos" aria-labelledby="servicos-title">
+      <div class="container">
+        <h2 id="servicos-title">Nossos Serviços</h2>
+        <div class="cards">
+          <article class="card">
+            <h3>🛢️ Troca de óleo</h3>
+            <p>Filtro, lubrificação e checagem de itens básicos para manter seu motor funcionando perfeitamente.</p>
+          </article>
+          <article class="card">
+            <h3>⚙️ Revisão geral</h3>
+            <p>Freios, suspensão, alinhamento e balanceamento. Segurança e conforto para você e sua família.</p>
+          </article>
+          <article class="card">
+            <h3>⚡ Diagnóstico elétrico</h3>
+            <p>Injeção eletrônica, bateria e acessórios elétricos. Tecnologia de ponta para identificar problemas.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section id="sobre" class="sobre" aria-labelledby="sobre-title">
+      <div class="container">
+        <h2 id="sobre-title">Sobre nós</h2>
+        <p>
+          Há <strong>15 anos</strong> cuidando de automóveis com equipe qualificada e atendimento transparente. 
+          Nossa missão é garantir que seu veículo esteja sempre em perfeitas condições, 
+          com preços justos e prazos cumpridos.
+        </p>
+      </div>
+    </section>
+
+    <!-- DEPOIMENTOS -->
+    <section id="depoimentos" class="depoimentos" aria-labelledby="depoimentos-title">
+      <div class="container">
+        <h2 id="depoimentos-title">Depoimentos</h2>
+        <blockquote cite="#">
+          <p>"Serviço excelente. Entrega no prazo e preço justo. Podem confiar de olhos fechados!"</p>
+          <footer>— <cite>João Silva, Cliente há 5 anos</cite></footer>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section id="contato" class="contato" aria-labelledby="contato-title">
+      <div class="container">
+        <h2 id="contato-title">Entre em Contato</h2>
+        <form id="form-contato" aria-label="Formulário de contato">
+          <label for="nome" class="visually-hidden">Nome completo</label>
+          <input 
+            type="text" 
+            id="nome" 
+            name="nome" 
+            placeholder="Seu nome completo" 
+            required 
+            autocomplete="name"
+            aria-required="true" />
+          
+          <label for="email" class="visually-hidden">E-mail</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="Seu melhor e-mail" 
+            required 
+            autocomplete="email"
+            aria-required="true" />
+          
+          <label for="mensagem" class="visually-hidden">Mensagem</label>
+          <textarea 
+            id="mensagem" 
+            name="mensagem" 
+            rows="4" 
+            placeholder="Descreva o serviço que você precisa ou tire suas dúvidas" 
+            required
+            aria-required="true"></textarea>
+          
+          <button type="submit" class="btn-primary">Enviar Mensagem</button>
+        </form>
+        <div id="form-msg" role="alert" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <p>
+        © 2026 Mecânica Inova • 
+        <span>📍 Rua Exemplo, 123 - Natal/RN</span> • 
+        <span>📞 (84) 1234-5678</span>
+      </p>
+      <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.7;">
+        Desenvolvido com ❤️ para o seu veículo
+      </p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="../public/assets/js/main.js"></script>
+</body>
+</html>

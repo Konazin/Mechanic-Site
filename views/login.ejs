@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — AutoMec</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="/" class="nav-logo">AUTO<span class="dot">·</span>MEC</a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/cadastro" class="nav-cta">Criar Conta</a></li>
+  </ul>
+</nav>
+
+<div class="auth-page">
+  <div class="auth-box">
+
+    <span class="label">Área do Cliente</span>
+    <h1>ENTRAR</h1>
+    <p class="sub">Acesse sua conta para gerenciar agendamentos.</p>
+
+    <!-- O back-end passa `erro` e `sucesso` para cá -->
+    <% if (locals.erro && erro) { %>
+      <div class="alert alert-error">⚠ <%= erro %></div>
+    <% } %>
+    <% if (locals.sucesso && sucesso) { %>
+      <div class="alert alert-success">✔ <%= sucesso %></div>
+    <% } %>
+
+    <%# ACTION aponta para a rota POST que você vai criar %>
+    <form method="POST" action="/login">
+
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email"
+               placeholder="seuemail@exemplo.com" required autocomplete="email">
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha"
+               placeholder="••••••••" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="btn btn-primary"
+              style="width:100%;justify-content:center;margin-top:.5rem">
+        Entrar →
+      </button>
+    </form>
+
+    <div class="form-foot">
+      Não tem conta? <a href="/cadastro">Cadastre-se grátis</a>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
