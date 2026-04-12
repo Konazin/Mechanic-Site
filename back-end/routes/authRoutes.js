@@ -1,47 +1,30 @@
-const express = require('express')
-const router = express.Router()
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+// back-end/routes/authRoutes.js
+const express = require('express');
+const { body, validationResult } = require('express-validator');
+const router = express.Router();
 
-const { User } = require('../../database/models')
+const authController = require('../controllers/authController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
-const SECRET = "supersecretkey"
-
-// 🔹 LOGIN
-router.post('/login', async (req, res) => {
-    try {
-        const { email, password } = req.body
-
-        const user = await User.findOne({ where: { email } })
-
-        if (req.user.id !== req.params.id) {
-            return res.status(403).json({ error: 'Forbidden' })
-        }
-
-        if (!user) {
-            return res.status(400).json({ error: 'User not found' })
-        }
-
-        // 🔐 compara senha
-        const isMatch = await bcrypt.compare(password, user.password)
-
-        if (!isMatch) {
-            return res.status(400).json({ error: 'Invalid password' })
-        }
-
-        // 🔑 gera token
-        const token = jwt.sign(
-            { id: user.id, email: user.email },
-            SECRET,
-            { expiresIn: '1d' }
-        )
-
-        res.json({ token })
-
-    } catch (err) {
-        console.error(err)
-        res.status(500).json({ error: 'Login error' })
+// 🔐 Login (público)
+router.post('/login',
+  body('email').isEmail().withMessage('E-mail inválido'),
+  body('password').notEmpty().withMessage('Senha é obrigatória'),
+  async (req, res) => {
+    // Validar inputs antes de chamar o controller
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
-})
+    // Chamar controller com await para garantir que é assíncrono
+    await authController.login(req, res);
+  }
+);
 
-module.exports = router
+// 📤 Logout (protegido)
+router.post('/logout', authMiddleware, authController.logout);
+
+// 👤 Perfil do usuário logado (protegido)
+router.get('/me', authMiddleware, authController.getMe);
+
+module.exports = router;

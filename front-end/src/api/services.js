@@ -1,139 +1,50 @@
-// ─────────────────────────────────────────────────────────────────
-//  src/api/services.js
-//  Todas as chamadas ao backend organizadas por domínio.
-//
-//  ✅ PARA O BACKEND:
-//  Cada função documenta a rota esperada, método HTTP,
-//  payload e formato de resposta.
-// ─────────────────────────────────────────────────────────────────
+// front-end/src/api/services.js
 import api from './axios'
 
-// ══════════════════════════════════════════════════════════════════
-//  AUTH
-//  Rotas: POST /auth/login  |  POST /auth/register  |  POST /auth/logout
-// ══════════════════════════════════════════════════════════════════
+// 🔹 EXPORTAÇÕES INDIVIDUAIS (preferido)
+export const login = async (credentials) => {
+  const response = await api.post('/auth/login', credentials)
+  if (response.data.token) {
+    localStorage.setItem('token', response.data.token)
+    localStorage.setItem('user', JSON.stringify(response.data.user || {}))
+  }
+  return response.data
+}
+export const register = (userData) => api.post('/users', userData)
+export const logout = () => {
+  localStorage.removeItem('token')
+  localStorage.removeItem('user')
+}
+export const getCurrentUser = () => {
+  const user = localStorage.getItem('user')
+  return user ? JSON.parse(user) : null
+}
+export const isAuthenticated = () => !!localStorage.getItem('token')
 
-/**
- * Login do usuário
- * POST /auth/login
- * Body: { email: string, password: string }
- * Response: { token: string, user: { id, name, email, role } }
- */
-export const authLogin = (credentials) =>
-  api.post('/auth/login', credentials)
+export const getAllUsers = () => api.get('/users')
+export const getUserById = (id) => api.get(`/users/${id}`)
 
-/**
- * Registro de novo usuário
- * POST /auth/register
- * Body: { name: string, email: string, password: string, phone: string }
- * Response: { token: string, user: { id, name, email, role } }
- */
-export const authRegister = (data) =>
-  api.post('/auth/register', data)
+export const getServices = () => api.get('/services')
+export const getServiceById = (id) => api.get(`/services/${id}`)
+export const createService = (data) => api.post('/services', data)
 
-/**
- * Logout (invalida token no servidor)
- * POST /auth/logout
- * Headers: Authorization: Bearer <token>
- */
-export const authLogout = () =>
-  api.post('/auth/logout')
+// 📅 Agendamentos - NOMES EXATOS que o componente espera
+export const getAppointments = (params = {}) => api.get('/scheduling', { params })
+export const getAvailableSlots = (date) => api.get(`/scheduling/available?date=${date}`)
+export const createAppointment = (data) => api.post('/scheduling', data)
+export const cancelAppointment = (id) => api.delete(`/scheduling/${id}`)
+export const updateAppointment = (id, data) => api.put(`/scheduling/${id}`, data)
 
+// 🔹 OBJETOS AGRUPADOS (compatibilidade) - COM NOMES CORRETOS
+export const authService = { login, register, logout, getCurrentUser, isAuthenticated }
+export const userService = { getAll: getAllUsers, getById: getUserById }
+export const serviceService = { getAll: getServices, getById: getServiceById, create: createService }
 
-// ══════════════════════════════════════════════════════════════════
-//  SERVICES (Serviços da oficina)
-//  Rotas: GET /services  |  GET /services/:id
-// ══════════════════════════════════════════════════════════════════
-
-/**
- * Lista todos os serviços disponíveis
- * GET /services
- * Response: [{ id, name, description, price, duration_minutes, category }]
- */
-export const getServices = () =>
-  api.get('/services')
-
-/**
- * Busca um serviço específico
- * GET /services/:id
- * Response: { id, name, description, price, duration_minutes, category }
- */
-export const getServiceById = (id) =>
-  api.get(`/services/${id}`)
-
-
-// ══════════════════════════════════════════════════════════════════
-//  APPOINTMENTS (Agendamentos)
-//  Rotas:
-//    GET    /appointments          → lista do usuário logado
-//    POST   /appointments          → cria novo agendamento
-//    PUT    /appointments/:id      → atualiza agendamento
-//    DELETE /appointments/:id      → cancela agendamento
-//    GET    /appointments/slots    → horários disponíveis
-// ══════════════════════════════════════════════════════════════════
-
-/**
- * Lista os agendamentos do usuário logado
- * GET /appointments
- * Response: [{ id, service, date, time, status, mechanic }]
- */
-export const getAppointments = () =>
-  api.get('/appointments')
-
-/**
- * Busca slots (horários) disponíveis para uma data
- * GET /appointments/slots?date=YYYY-MM-DD&serviceId=123
- * Response: [{ time: "09:00", available: true }]
- */
-export const getAvailableSlots = (date, serviceId) =>
-  api.get('/appointments/slots', { params: { date, serviceId } })
-
-/**
- * Cria um novo agendamento
- * POST /appointments
- * Body: { serviceId: number, date: "YYYY-MM-DD", time: "HH:MM", notes?: string }
- * Response: { id, service, date, time, status: "pending" }
- */
-export const createAppointment = (data) =>
-  api.post('/appointments', data)
-
-/**
- * Atualiza um agendamento (ex: reagendar)
- * PUT /appointments/:id
- * Body: { date?: string, time?: string, notes?: string }
- * Response: { id, service, date, time, status }
- */
-export const updateAppointment = (id, data) =>
-  api.put(`/appointments/${id}`, data)
-
-/**
- * Cancela um agendamento
- * DELETE /appointments/:id
- * Response: { message: "Appointment cancelled" }
- */
-export const cancelAppointment = (id) =>
-  api.delete(`/appointments/${id}`)
-
-/**
- * Busca TODOS os agendamentos (admin/mecânico)
- * GET /appointments/all
- * Headers: Authorization: Bearer <admin_token>
- * Response: [{ id, client, service, date, time, status, mechanic }]
- */
-export const getAllAppointments = () =>
-  api.get('/appointments/all')
-
-
-// ══════════════════════════════════════════════════════════════════
-//  CONTACT
-//  Rota: POST /contact
-// ══════════════════════════════════════════════════════════════════
-
-/**
- * Envia mensagem de contato
- * POST /contact
- * Body: { name: string, email: string, phone: string, message: string }
- * Response: { message: "Message sent successfully" }
- */
-export const sendContact = (data) =>
-  api.post('/contact', data)
+// ✅ schedulingService com os nomes que o Scheduling.jsx espera
+export const schedulingService = {
+  getAppointments,      // ← Era 'getAll', agora é 'getAppointments'
+  getAvailableSlots,
+  createAppointment,    // ← Era 'create', agora é 'createAppointment'
+  cancelAppointment,    // ← Era 'cancel', agora é 'cancelAppointment'
+  updateAppointment
+}

@@ -1,119 +1,90 @@
+// front-end/src/pages/Login.jsx
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { authLogin } from '../api/services'
+import { authService } from '../api/services'
 
 export default function Login() {
-  const navigate = useNavigate()
-  const [form, setForm]       = useState({ email: '', password: '' })
+  const [formData, setFormData] = useState({ email: '', password: '' })
+  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [error, setError]     = useState(null)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('')
     setLoading(true)
-    setError(null)
+
+    console.log('📤 Enviando login:', formData)
 
     try {
-      // ── TROCAR pelo real quando o backend estiver pronto: ──
-      // const { data } = await authLogin(form)
-      // localStorage.setItem('fh_token', data.token)
-      // navigate('/')
-
-      // Mock login
-      await new Promise((r) => setTimeout(r, 800))
-      if (form.email === 'demo@flyinghorse.com' && form.password === 'demo123') {
-        localStorage.setItem('fh_token', 'mock_jwt_token_here')
-        navigate('/')
-      } else {
-        setError('Invalid credentials. Try demo@flyinghorse.com / demo123')
-      }
+      const data = await authService.login(formData)
+      console.log('🎉 Login sucesso:', data)
+      
+      // Redirecionar
+      navigate('/dashboard')
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.')
+      console.error('💥 Erro capturado:', err)
+      setError(
+        err.response?.data?.error || 
+        err.message || 
+        'Erro ao fazer login. Verifique e-mail e senha.'
+      )
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-[#f0efe8] flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        {/* Card */}
-        <div className="bg-white rounded-sm shadow border border-olive-100 overflow-hidden">
-          {/* Top accent */}
-          <div className="h-1 bg-olive-700" />
-
-          <div className="p-8">
-            <div className="text-center mb-8">
-              <h1 className="font-display text-3xl text-olive-900 tracking-widest">
-                FLYING HORSE
-              </h1>
-              <p className="font-body text-xs tracking-[0.25em] uppercase text-olive-400 mt-1">
-                mechanics
-              </p>
-            </div>
-
-            <h2 className="font-display text-lg text-olive-800 tracking-widest mb-6 text-center">
-              SIGN IN
-            </h2>
-
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 font-body text-sm rounded px-4 py-3 mb-4 tracking-wide">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block font-body text-xs tracking-widest uppercase text-olive-500 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="your@email.com"
-                  className="w-full font-body text-sm text-olive-900 bg-olive-50 border border-olive-200
-                             rounded px-3 py-2.5 focus:outline-none focus:border-olive-500 transition-colors"
-                />
-              </div>
-              <div>
-                <label className="block font-body text-xs tracking-widest uppercase text-olive-500 mb-1">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  required
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  placeholder="••••••••"
-                  className="w-full font-body text-sm text-olive-900 bg-olive-50 border border-olive-200
-                             rounded px-3 py-2.5 focus:outline-none focus:border-olive-500 transition-colors"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-full btn-primary py-3 text-sm tracking-widest mt-2
-                  ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}
-              >
-                {loading ? 'Signing in...' : 'Sign In'}
-              </button>
-            </form>
-
-            <p className="font-body text-sm text-center text-olive-500 mt-6 tracking-wider">
-              No account yet?{' '}
-              <Link to="/register" className="text-olive-700 hover:text-olive-500 font-semibold transition-colors">
-                Register
-              </Link>
-            </p>
-          </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-gray-900">🔧 Mechanic Pro</h2>
+          <p className="mt-2 text-gray-600">Faça login para continuar</p>
         </div>
 
-        {/* Demo hint */}
-        <p className="text-center font-body text-xs text-olive-400 tracking-wider mt-4">
-          Demo: demo@flyinghorse.com / demo123
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">E-mail</label>
+            <input
+              type="email"
+              required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Senha</label>
+            <input
+              type="password"
+              required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md disabled:opacity-50"
+          >
+            {loading ? 'Entrando...' : 'Entrar'}
+          </button>
+        </form>
+
+        <p className="text-center text-sm text-gray-600">
+          Não tem conta?{' '}
+          <Link to="/register" className="text-blue-600 hover:underline">
+            Cadastre-se
+          </Link>
         </p>
       </div>
     </div>

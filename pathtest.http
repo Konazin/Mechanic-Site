@@ -7,3 +7,8 @@ BODY:{
 ###
 
 GET http://localhost:3000/api/users
+
+###
+
+POST http://127.0.0.1/api/auth/login 
+HEAD:{"email":"m4caun4@gmail.com","password":"***"}
