@@ -1,0 +1,9 @@
+POST http://localhost:3000/api/users 
+BODY:{
+  "name": "Miguel",
+  "email": "miguel@email.com",
+  "password": "123456"
+}
+###
+
+GET http://localhost:3000/api/users

@@ -1,0 +1,36 @@
+{
+  "name": "mechanic-site",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon --exec node index.js",
+    "database": "npx sequelize-cli "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Konazin/Mechanic-Site.git"
+  },
+  "author": "Kona-Miguel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Konazin/Mechanic-Site/issues"
+  },
+  "homepage": "https://github.com/Konazin/Mechanic-Site#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "express-validator": "^7.3.2",
+    "fs": "^0.0.1-security",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "path": "^0.12.7",
+    "process": "^0.11.10"
+  }
+}

@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background-color: #f0efe8;
+  }
+  h1, h2, h3 {
+    font-family: 'Oswald', sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-olive-700 hover:bg-olive-600 text-olive-100 font-body font-semibold
+           tracking-widest px-6 py-2 rounded transition-colors duration-200;
+  }
+  .section-card {
+    @apply bg-olive-800/85 text-olive-100 p-8 flex flex-col justify-center h-full;
+  }
+  .section-card h2 {
+    @apply font-display text-2xl tracking-widest text-white
+           border-b-2 border-olive-200 pb-3 mb-4;
+  }
+  .section-card p {
+    @apply font-body text-sm tracking-widest uppercase text-olive-200 leading-8;
+  }
+}
+
+/* FullCalendar custom theme */
+.fc {
+  font-family: 'Rajdhani', sans-serif !important;
+}
+.fc .fc-toolbar-title {
+  font-family: 'Oswald', sans-serif !important;
+  font-size: 1.3rem !important;
+  letter-spacing: 0.1em;
+  color: #2e2e22;
+}
+.fc .fc-button-primary {
+  background-color: #4a4a38 !important;
+  border-color: #4a4a38 !important;
+  font-family: 'Rajdhani', sans-serif !important;
+  letter-spacing: 0.05em;
+}
+.fc .fc-button-primary:hover {
+  background-color: #5c5c47 !important;
+}
+.fc .fc-event {
+  background-color: #5c5c47 !important;
+  border-color: #4a4a38 !important;
+  font-family: 'Rajdhani', sans-serif !important;
+}
+.fc .fc-day-today {
+  background-color: #e8e8d0 !important;
+}
