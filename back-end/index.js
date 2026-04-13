@@ -1,13 +1,24 @@
-// back-end/index.js
+
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
+console.log('🚀 Mechanic-API iniciando | NODE_ENV:', process.env.NODE_ENV || 'development');
+
 const express = require('express');
 const cors = require('cors');
-const sequelize = require('../database/connection');
+
+// Importar sequelize
+let sequelize;
+try {
+  sequelize = require('../database/connection');
+  console.log('✅ Sequelize carregado');
+} catch (err) {
+  console.error('❌ Erro ao carregar sequelize:', err.message);
+  process.exit(1);
+}
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 // Middlewares
 app.use(cors({
@@ -19,63 +30,54 @@ app.use(express.urlencoded({ extended: true }));
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    message: 'API rodando!', 
-    timestamp: new Date(),
-    environment: process.env.NODE_ENV || 'development'
-  });
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // Rotas
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/users', require('./routes/routerUser'));
-app.use('/api/scheduling', require('./routes/SchedulingRoutes'));
+const routes = [
+  { path: '/api/auth', file: './routes/authRoutes' },
+  { path: '/api/users', file: './routes/routerUser' },
+  { path: '/api/scheduling', file: './routes/schedulingRoutes' }
+];
 
-// Rota 404
-app.use((req, res) => {
-  res.status(404).json({ error: 'Rota não encontrada' });
+routes.forEach(({ path: routePath, file }) => {
+  try {
+    app.use(routePath, require(file));
+    console.log(`✅ Rota: ${routePath}`);
+  } catch (e) {
+    console.warn(`⚠️ ${routePath}:`, e.message);
+  }
 });
 
-// Middleware de erro global
-app.use((err, req, res, next) => {
-  console.error('❌ Erro:', err.stack);
-  res.status(err.status || 500).json({ 
-    error: process.env.NODE_ENV === 'production' 
-      ? 'Erro interno do servidor' 
-      : err.message 
-  });
-});
+// Registrar models para o Sequelize
+console.log('🔹 Registrando models...');
+try {
+  require('./models/User');
+  require('./models/Scheduling');
+  console.log('✅ Models registrados');
+} catch (e) {
+  console.warn('⚠️ Models:', e.message);
+}
 
 // Iniciar servidor
 const startServer = async () => {
   try {
-    console.log('🔍 Conectando ao banco de dados...');
     await sequelize.authenticate();
-    console.log('✅ Banco de dados conectado!');
+    console.log('✅ Banco conectado');
     
-    // Sincronizar models (apenas em dev)
     if (process.env.NODE_ENV !== 'production') {
-      await sequelize.sync({ alter: false });
-      console.log('📊 Models sincronizados');
+      await sequelize.sync({ alter: true });
+      console.log('🔄 Models sincronizados');
     }
     
     app.listen(PORT, () => {
-      console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
-      console.log(`📝 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🚀 Servidor na porta ${PORT}`);
     });
   } catch (error) {
-    console.error('❌ Erro ao iniciar servidor:', {
-      message: error.message,
-      stack: error.stack
-    });
-    process.exit(1);
+    console.error('❌ Erro fatal:', error.message);
+    setTimeout(() => process.exit(1), 1000);
   }
 };
 
-if (process.env.NODE_ENV !== 'production') {
-  require('./models/User');
-  require('./models/Scheduling');
-}
-
 startServer();
+process.on('unhandledRejection', err => console.error('❌ Unhandled:', err));
