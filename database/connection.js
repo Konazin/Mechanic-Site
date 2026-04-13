@@ -8,7 +8,6 @@ const isProduction = process.env.NODE_ENV === 'production';
 let sequelize;
 
 if (isProduction) {
-  // Produção: PostgreSQL (Render, Railway, etc.)
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
     protocol: 'postgres',
@@ -18,10 +17,16 @@ if (isProduction) {
         require: true,
         rejectUnauthorized: false
       }
+    },
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
     }
   });
 } else {
-  // Desenvolvimento: SQLite
+  // 🔵 DESENVOLVIMENTO: SQLite local
   const dbPath = path.resolve(__dirname, 'database.sqlite');
   console.log(`📦 Usando SQLite em: ${dbPath}`);
   
@@ -29,17 +34,7 @@ if (isProduction) {
     dialect: 'sqlite',
     storage: dbPath,
     logging: false,
-    define: {
-      timestamps: true,
-      underscored: false // usa createdAt, updatedAt
-    }
-  });
-
-  // ✅ CORRIGIDO: Desativar foreign keys no SQLite via query direta
-  sequelize.afterConnect(() => {
-    if (!isProduction) {
-      return sequelize.query('PRAGMA foreign_keys = OFF;');
-    }
+    define: { timestamps: true, underscored: true }
   });
 }
 
