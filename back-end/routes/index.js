@@ -3,7 +3,7 @@ const router = express.Router();
 
 const authRoutes       = require('./authRoutes');
 const userRoutes       = require('./userRoutes');
-const schedulingRoutes = require('./SchedulingRoutes');
+const schedulingRoutes = require('./schedulingRoutes');
 const serviceRoutes    = require('./serviceRoutes');
 
 router.use('/auth',       authRoutes);
