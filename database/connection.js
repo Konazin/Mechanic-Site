@@ -8,13 +8,16 @@ const isProduction = process.env.NODE_ENV === 'production';
 let sequelize;
 
 if (isProduction) {
-  // Produção: PostgreSQL (Render)
+  // Produção: PostgreSQL (Render, Railway, etc.)
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
     protocol: 'postgres',
     logging: false,
     dialectOptions: {
-      ssl: { require: true, rejectUnauthorized: false }
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
     }
   });
 } else {
@@ -26,25 +29,13 @@ if (isProduction) {
     dialect: 'sqlite',
     storage: dbPath,
     logging: false,
-    define: { timestamps: true, underscored: true },
-    
-    // 🔹 DESATIVA FOREIGN KEYS NO SQLITE (para dev)
-    dialectOptions: {
-      foreignKeys: false
-    },
-    // 🔹 Ou, se não funcionar, use hooks para desativar:
-    hooks: {
-      beforeConnect: async (config) => {
-        // SQLite precisa disso para desativar constraints
-        if (config.dialect === 'sqlite') {
-          const sqlite = require('sqlite3');
-          // Isso será aplicado via query após conectar
-        }
-      }
+    define: {
+      timestamps: true,
+      underscored: false // usa createdAt, updatedAt
     }
   });
-  
-  // 🔹 Após conectar, desativa foreign keys via query
+
+  // ✅ CORRIGIDO: Desativar foreign keys no SQLite via query direta
   sequelize.afterConnect(() => {
     if (!isProduction) {
       return sequelize.query('PRAGMA foreign_keys = OFF;');
@@ -52,14 +43,16 @@ if (isProduction) {
   });
 }
 
+// Testar conexão
 const testConnection = async () => {
   try {
     await sequelize.authenticate();
-    console.log('✅ Banco conectado!');
+    console.log('✅ Banco de dados conectado com sucesso!');
   } catch (error) {
-    console.error('❌ Erro de conexão:', error.message);
+    console.error('❌ Erro ao conectar no banco:', error.message);
   }
 };
+
 testConnection();
 
 module.exports = sequelize;

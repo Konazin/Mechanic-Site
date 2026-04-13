@@ -1,6 +1,6 @@
 // back-end/controllers/userController.js
-const bcrypt = require('bcrypt');
-const User = require('../models/User'); // Ajuste se seu model tiver nome diferente
+const bcrypt = require('bcryptjs'); // ✅ CORRIGIDO: era 'bcrypt', agora é 'bcryptjs'
+const User = require('../models/User');
 
 // ✅ Criar usuário (registro)
 exports.createUser = async (req, res) => {
@@ -42,7 +42,7 @@ exports.createUser = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll({
-      attributes: { exclude: ['password'] } // Não retornar senha
+      attributes: { exclude: ['password'] }
     });
     res.json(users);
   } catch (error) {
@@ -74,19 +74,27 @@ exports.getUserById = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, phone } = req.body;
+    const { name, email, phone, password } = req.body;
 
     const user = await User.findByPk(id);
     if (!user) {
       return res.status(404).json({ error: 'Usuário não encontrado' });
     }
 
-    // Atualizar campos permitidos
-    await user.update({
+    // Preparar dados para atualização
+    const updateData = {
       name: name || user.name,
       email: email || user.email,
       phone: phone !== undefined ? phone : user.phone
-    });
+    };
+
+    // Se houver nova senha, fazer hash
+    if (password) {
+      updateData.password = await bcrypt.hash(password, 10);
+    }
+
+    // Atualizar usuário
+    await user.update(updateData);
 
     const { password: _, ...updatedUser } = user.toJSON();
     res.json(updatedUser);

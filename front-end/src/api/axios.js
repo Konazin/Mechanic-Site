@@ -13,7 +13,11 @@ api.interceptors.request.use(
     const token = localStorage.getItem('token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
-      console.log('🔑 Token enviado:', token.substring(0, 20) + '...')
+      
+      // ✅ CORRIGIDO: Só loga em desenvolvimento
+      if (import.meta.env.DEV) {
+        console.log('🔑 Token enviado:', token.substring(0, 20) + '...')
+      }
     }
     return config
   },
@@ -28,10 +32,14 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.warn('⚠️ Token inválido/expirado, limpando localStorage')
+      // Token inválido ou expirado
       localStorage.removeItem('token')
       localStorage.removeItem('user')
-      // Não redirecione aqui para não criar loop
+      
+      // Redirecionar para login apenas se não estiver já na página de login
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }

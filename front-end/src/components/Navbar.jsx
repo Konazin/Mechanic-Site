@@ -15,7 +15,7 @@ export default function Navbar() {
     <nav className="bg-gray-900 text-white p-4 shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-xl font-bold">
-          🔧 Mechanic Pro
+          🔧 Flying Horse Mechanic
         </Link>
         
         <div className="flex items-center gap-6">

@@ -10,7 +10,8 @@ const User = sequelize.define('User', {
   phone: { type: DataTypes.STRING, allowNull: true }
 }, {
   tableName: 'users',
-  timestamps: true
+  timestamps: true,
+  underscored: false
 });
 
 // Exportar

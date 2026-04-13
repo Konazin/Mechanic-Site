@@ -1,20 +1,16 @@
 // back-end/models/Scheduling.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../database/connection');
-const User = require('./User'); // Importa o model User para relacionamento
+const User = require('./User');
 
 const Scheduling = sequelize.define('Scheduling', {
   userId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    //references: {
-    //  model: 'users',
-    //  key: 'id'
-    //}
+    allowNull: false
   },
   serviceId: {
     type: DataTypes.INTEGER,
-    allowNull: true // Pode ser null se for agendamento genérico
+    allowNull: true
   },
   date: {
     type: DataTypes.DATEONLY, // Apenas data (YYYY-MM-DD)
@@ -22,7 +18,10 @@ const Scheduling = sequelize.define('Scheduling', {
   },
   time: {
     type: DataTypes.STRING, // Formato: "HH:MM"
-    allowNull: false
+    allowNull: false,
+    validate: {
+      is: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/ // Valida formato HH:MM
+    }
   },
   status: {
     type: DataTypes.ENUM('pending', 'confirmed', 'cancelled', 'completed'),
@@ -33,17 +32,25 @@ const Scheduling = sequelize.define('Scheduling', {
     allowNull: true
   },
   vehicleInfo: {
-    type: DataTypes.STRING, // Ex: "Gol 2020 - ABC-1234"
+    type: DataTypes.STRING,
     allowNull: true
   }
 }, {
   tableName: 'scheduling',
   timestamps: true,
-  underscored: true
+  underscored: false // ✅ CORRIGIDO: era true, agora é false para consistência
 });
 
-// Relacionamento: Um usuário tem muitos agendamentos
-User.hasMany(Scheduling, { foreignKey: 'userId', as: 'appointments' });
-Scheduling.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+// Relacionamentos
+User.hasMany(Scheduling, { 
+  foreignKey: 'userId', 
+  as: 'appointments',
+  onDelete: 'CASCADE' // Se deletar usuário, deleta agendamentos
+});
+
+Scheduling.belongsTo(User, { 
+  foreignKey: 'userId', 
+  as: 'user' 
+});
 
 module.exports = Scheduling;

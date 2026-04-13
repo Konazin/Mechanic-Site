@@ -1,5 +1,5 @@
 // back-end/controllers/authController.js
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); // ✅ CORRIGIDO: era 'bcrypt', agora é 'bcryptjs'
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
@@ -16,7 +16,6 @@ exports.login = async (req, res) => {
     // Buscar usuário pelo e-mail
     const user = await User.findOne({ where: { email } });
     
-    // ✅ Verificar se usuário existe ANTES de acessar propriedades
     if (!user) {
       return res.status(401).json({ error: 'E-mail ou senha inválidos' });
     }
@@ -31,7 +30,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign(
       { id: user.id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: '7d' } // Token válido por 7 dias
+      { expiresIn: '7d' }
     );
 
     // Retornar dados sem a senha
@@ -57,7 +56,6 @@ exports.logout = (req, res) => {
 // 👤 Obter dados do usuário logado (via token)
 exports.getMe = async (req, res) => {
   try {
-    // O authMiddleware já colocou req.userId
     const user = await User.findByPk(req.userId, {
       attributes: { exclude: ['password'] }
     });
