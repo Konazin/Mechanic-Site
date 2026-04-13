@@ -9,6 +9,9 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard.jsx'
 import PrivateRoute from './components/PrivateRoute'
+import Terms from './pages/Terms'
+import Contact from './pages/Contact'
+import Privacy from './pages/Privacy'
 
 function App() {
   return (
@@ -22,6 +25,9 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
             
             {/* Rotas protegidas */}
             <Route element={<PrivateRoute />}>
