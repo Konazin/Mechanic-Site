@@ -1,3 +1,6 @@
+// front-end/src/components/Footer.jsx
+import { Link } from 'react-router-dom'
+
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-400 py-8 mt-auto">
@@ -7,9 +10,9 @@ export default function Footer() {
           © {new Date().getFullYear()} Todos os direitos reservados.
         </p>
         <div className="mt-4 flex justify-center gap-4 text-sm">
-          <a href="/privacy" className="hover:text-white">Privacidade</a>
-          <a href="/terms" className="hover:text-white">Termos</a>
-          <a href="/contact" className="hover:text-white">Contato</a>
+          <Link to="/privacy" className="hover:text-white">Privacidade</Link>
+          <Link to="/terms" className="hover:text-white">Termos</Link>
+          <Link to="/contact" className="hover:text-white">Contato</Link>
         </div>
       </div>
     </footer>

@@ -1,11 +1,8 @@
 {
   "name": "mechanic-site",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
+  "version": "2.0.0",
+  "description": "Sistema de agendamento para oficina mecânica",
+  "private": true,
   "scripts": {
     "dev:backend": "cd back-end && npm run dev",
     "dev:frontend": "cd front-end && npm run dev",
@@ -16,24 +13,6 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Konazin/Mechanic-Site.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Konazin/Mechanic-Site/issues"
-  },
-  "homepage": "https://github.com/Konazin/Mechanic-Site#readme",
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "dotenv": "^17.4.1",
-    "pg": "^8.20.0",
-    "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.8"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

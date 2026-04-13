@@ -3,7 +3,6 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const router = express.Router();
 
-// Importar controller COMO OBJETO (evita undefined)
 const userController = require('../controllers/userController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
@@ -17,12 +16,16 @@ router.post('/',
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    // Chamar controller diretamente
-    await userController.createUser(req, res);
+    try {
+      await userController.createUser(req, res);
+    } catch (error) {
+      console.error('❌ Erro no registro:', error.message);
+      res.status(500).json({ error: 'Erro interno ao registrar usuário' });
+    }
   }
 );
 
-// 🔐 Rotas PROTEGIDAS: Usam authMiddleware
+// 🔐 Rotas PROTEGIDAS
 router.get('/', authMiddleware, userController.getAllUsers);
 router.get('/:id', authMiddleware, userController.getUserById);
 router.put('/:id', authMiddleware, userController.updateUser);
