@@ -76,10 +76,8 @@ const startServer = async () => {
     await sequelize.authenticate();
     console.log('✅ Banco conectado');
  
-    if (process.env.NODE_ENV !== 'production') {
-      await sequelize.sync({ alter: true });
-      console.log('🔄 Models sincronizados (development)');
-    }
+    await sequelize.sync({ alter: true });
+    console.log('🔄 Models sincronizados');
  
     app.listen(PORT, () => {
       console.log(`🚀 Servidor rodando na porta ${PORT}`);
