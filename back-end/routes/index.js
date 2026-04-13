@@ -1,10 +1,14 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 
-const userRoutes = require('./routerUser')
-const authRoutes = require('./authRoutes')
+const authRoutes       = require('./authRoutes');
+const userRoutes       = require('./userRoutes');
+const schedulingRoutes = require('./schedulingRoutes');
+const serviceRoutes    = require('./serviceRoutes');
 
-router.use('/users', userRoutes)
-router.use('/auth', authRoutes)
+router.use('/auth',       authRoutes);
+router.use('/users',      userRoutes);
+router.use('/scheduling', schedulingRoutes);
+router.use('/services',   serviceRoutes);
 
-module.exports = router
+module.exports = router;
